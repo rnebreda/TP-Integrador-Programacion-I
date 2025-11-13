@@ -515,6 +515,9 @@ def filtrarPorCantidad(paises, criterio):
     if not esEnteroPositivo(cotaSuperior, "Cota Superior no válida"):
         return paisesFiltrados
 
+    cotaInferior = int(cotaInferior)
+    cotaSuperior = int(cotaSuperior)
+
     if cotaInferior > cotaSuperior:
         print("\t" + f"[X] La cota inferior no puede ser mayor a la cota superior")
         return paisesFiltrados
