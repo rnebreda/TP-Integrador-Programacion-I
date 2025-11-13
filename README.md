@@ -58,8 +58,6 @@ python TrabajoPractico.py
 ### Ejemplo de uso:
 
 #### 1 Agregar País
-- Img
-	![[Pasted image 20251112232736.png]]
 
 ```bash
 ******************************************************************************************
