@@ -18,9 +18,9 @@ El programa presenta un menú interactivo en consola con las siguientes opciones
 4. Filtrar Países
 5. Mostrar Estadísticas
 6. Mostrar Países
-7. Salir
+0. Salir
 ******************************************************************************************
-[-] Ingrese una opción:
+[-] Ingrese una opción
 ```
 ---
 > Menú principal
@@ -67,7 +67,7 @@ python TrabajoPractico.py
 4. Filtrar Países
 5. Mostrar Estadísticas
 6. Mostrar Países
-7. Salir
+0. Salir
 ******************************************************************************************
 [-] Ingrese una opción: 1
 
@@ -112,7 +112,7 @@ OPCIÓN 1: Agregar Países
 4. Filtrar Países
 5. Mostrar Estadísticas
 6. Mostrar Países
-7. Salir
+0. Salir
 ******************************************************************************************
 [-] Ingrese una opción: 5
 
