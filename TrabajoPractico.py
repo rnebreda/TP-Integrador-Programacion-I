@@ -15,7 +15,7 @@ COLUMNAS_ARCHIVO = ["nombre", "poblacion", "superficie", "continente"]
 # ==========================
 # Funciones Principales
 
-def mostrarMenu():
+def mostrarMenu(): #MENU PRINCIPAL
     """Muestra el menú principal y gestiona las opciones."""
 
     while True:
@@ -62,7 +62,7 @@ def mostrarMenu():
             case _:
                 print("[X] Opción no válida. Por favor ingrese un número del 1 al 6. (0 para salir)")
 
-def ingresarPaises():
+def ingresarPaises(): #OPCION 1 DEL MENU
     """Permite al usuario ingresar uno o muchos paises en un archivo .csv"""
 
     # Obtengo un listado con los registros del archivo.csv
@@ -85,7 +85,7 @@ def ingresarPaises():
     # Hago un único guardado con todos los países.
     guardarPaises(paises)
 
-def actualizarPais():
+def actualizarPais(): #OPCION 2 DEL MENU
     """Busca un país por el nombre y si lo encuentra, permite modificar los valores de sus capos (población o superficie)"""
 
     paises = obtenerPaises()
@@ -132,7 +132,7 @@ def actualizarPais():
                 guardarPaises(paises)
                 break
 
-def mostrarPais():
+def mostrarPais(): #OPCION 3 DEL MENU
     """Busca un país en el archivo y lista su información, tambien lista resultados similares a la busqueda"""
 
     # Obtengo lista con los paises
@@ -169,31 +169,7 @@ def mostrarPais():
 
     listarPaises(resultados)
 
-def obtenerResultadosIndice(indices, paises):
-    """Retorna una lista de países a partir de una lista de indices con sus respectivas posiciones en la lista original."""
-
-    resultados = []
-
-    if not indices:
-        return resultados
-
-    # Busca los paises a partir de la lista de coincidencias
-    for i in range(len(paises)):
-        if i in indices:
-            resultados.append(paises[i])
-
-    return resultados
-
-def mostrarPaises(paises):
-    """Lista todos los paises de la lista pasada como parametros, si no se le pasa una lista, obtiene los pasises desde el archivo .csv"""
-
-    if not paises:
-        print("\t" + "[X] No hay paises cargados.")
-        return
-
-    listarPaises(paises)
-
-def filtrarPaises():
+def filtrarPaises(): #OPCION 4 DEL MENU
     paises = obtenerPaises()
     if not paises:
         print("\t" + "[X] No hay paises cargados.")
@@ -236,6 +212,43 @@ def filtrarPaises():
     paisesResultado = ordenarPaises(paisesResultado)
 
     listarPaises(paisesResultado)
+
+def mostrarEstadisticas(paises): #OPCION 5 DEL MENU
+    if not paises:
+        print("\t" + "[X] No hay paises cargados.")
+        return
+
+    # Obtener información estadistica sobre los países
+    estadisticas = obtenerEstadisticas(paises)
+
+    # Ejecutar reportes
+    reporteCotasPoblacion(estadisticas['cotasPoblacion'])
+    reportePromedios(estadisticas['promedios'])
+    reportePaisesPorContinente(estadisticas['paisesPorContinente'])
+
+def mostrarPaises(paises): #OPCION 6 DEL MENU
+    """Lista todos los paises de la lista pasada como parametros, si no se le pasa una lista, obtiene los pasises desde el archivo .csv"""
+
+    if not paises:
+        print("\t" + "[X] No hay paises cargados.")
+        return
+
+    listarPaises(paises)
+
+def obtenerResultadosIndice(indices, paises):
+    """Retorna una lista de países a partir de una lista de indices con sus respectivas posiciones en la lista original."""
+
+    resultados = []
+
+    if not indices:
+        return resultados
+
+    # Busca los paises a partir de la lista de coincidencias
+    for i in range(len(paises)):
+        if i in indices:
+            resultados.append(paises[i])
+
+    return resultados
 
 def ordenarPaises(paises):
     paisesOrdenados = copy.deepcopy(paises)
@@ -343,24 +356,13 @@ def obtenerEstadisticas(paises):
 
     return estadisticas
 
-def mostrarEstadisticas(paises):
-    if not paises:
-        print("\t" + "[X] No hay paises cargados.")
-        return
-
-    # Obtener información estadistica sobre los países
-    estadisticas = obtenerEstadisticas(paises)
-
-    # Ejecutar reportes
-    reporteCotasPoblacion(estadisticas['cotasPoblacion'])
-    reportePromedios(estadisticas['promedios'])
-    reportePaisesPorContinente(estadisticas['paisesPorContinente'])
 
 # ==========================
 # Utilidades
 # ==========================
 
 def mostrarMenúOpciones(mensaje, opciones):
+    """ Para validar el criterio de ordenamiento y el tipo ascendente o descendente """
     print("\n" + f"[!] {mensaje}")
     for i in range(len(opciones)):
         print(f"\t{i + 1}. {opciones[i]}")
@@ -414,7 +416,7 @@ def listarPais(pais, modoLista = False):
     print(separador)
 
 def listarPaises(paises):
-    """Lista la información de todos los paises pasados como parámetro"""
+    """Lista la información de todos los paises de una lista pasada como parámetro"""
 
     # Listar Encabezado
     encabezado = f"{'Nº':>3} | {'NOMBRE':<20} | {'POBLACIÓN':<12} | {'SUPERFICIE':<12} | {'CONTINENTE':>15} |"
