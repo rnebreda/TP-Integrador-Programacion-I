@@ -60,7 +60,7 @@ def mostrarMenu():
                 break
 
             case _:
-                print("[X] Opción no válida. Por favor ingrese un número del 1 al 7. (0 para salir)")
+                print("[X] Opción no válida. Por favor ingrese un número del 1 al 6. (0 para salir)")
 
 def ingresarPaises():
     """Permite al usuario ingresar uno o muchos paises en un archivo .csv"""
@@ -75,7 +75,7 @@ def ingresarPaises():
         paises.append(pais)
 
         # Verifico si el usuario desea agregar otro.
-        agregarSiguiente = input("[-] Presione 'S' para agregar el siguiente: ")
+        agregarSiguiente = input("[-] Presione 'S' para agregar el siguiente: (ENTER para volver) ")
 
         # Vuelvo al menú principal
         if agregarSiguiente.strip().lower() != "s":
@@ -133,7 +133,7 @@ def actualizarPais():
                 break
 
 def mostrarPais():
-    """Busca un país en el archivo y si existe, lista su información"""
+    """Busca un país en el archivo y lista su información, tambien lista resultados similares a la busqueda"""
 
     # Obtengo lista con los paises
     paises = obtenerPaises()
@@ -147,14 +147,42 @@ def mostrarPais():
         print("\t" + "[X] El nombre del país no puede estar vacío.")
         return
 
-    # Busco el país
+    # Busco el país por coincidencia exacta.
     indice = buscarPais(nombre, paises)
     if indice == -1:
-        print("\t" + f"[X] No se pudo encontrar el país '{nombre}'")
+        print("\t" + f"[X] No se pudo encontrar el país '{nombre}'.")
+        # return
+    else:
+        # Muestro el país
+        listarPais(paises[indice])
+
+    # Busco y muestros países por coincidencia parcial.
+    indices = buscarPaisesParcial(nombre, paises, True)
+    resultados = obtenerResultadosIndice(indices, paises)
+
+    if not resultados:
+        print("\t" + f"[X] No se pudo encontrar restultados similares.")
         return
 
     # Listo la información del país
-    listarPais(paises[indice])
+    print(f"[!] Listando similares...")
+
+    listarPaises(resultados)
+
+def obtenerResultadosIndice(indices, paises):
+    """Retorna una lista de países a partir de una lista de indices con sus respectivas posiciones en la lista original."""
+
+    resultados = []
+
+    if not indices:
+        return resultados
+
+    # Busca los paises a partir de la lista de coincidencias
+    for i in range(len(paises)):
+        if i in indices:
+            resultados.append(paises[i])
+
+    return resultados
 
 def mostrarPaises(paises):
     """Lista todos los paises de la lista pasada como parametros, si no se le pasa una lista, obtiene los pasises desde el archivo .csv"""
@@ -373,15 +401,16 @@ def listarPais(pais, modoLista = False):
         print("\t" + "* Continente: " + pais["continente"])
         return
 
-    # Listar Encabezado
+    # Encabezado
     encabezado = f"| {'NOMBRE':<20} | {'POBLACIÓN':>12} | {'SUPERFICIE':>12} | {'CONTINENTE':>15} |"
     separador = "-" * len(encabezado)
+
     print(separador)
     print(encabezado)
     print(separador)
 
     # Listar Data del País
-    print(f"| {pais['nombre']:<20} | {pais['poblacion']:>12} | {pais['superficie']:>12} | {pais["continente"]:>15} |")
+    print(f"| {pais['nombre']:<20} | {pais['poblacion']:>12} | {pais['superficie']:>12} | {pais['continente']:>15} |")
     print(separador)
 
 def listarPaises(paises):
@@ -389,6 +418,7 @@ def listarPaises(paises):
 
     # Listar Encabezado
     encabezado = f"{'Nº':>3} | {'NOMBRE':<20} | {'POBLACIÓN':<12} | {'SUPERFICIE':<12} | {'CONTINENTE':>15} |"
+    print("-" * len(encabezado))
     print(encabezado)
     print("-" * len(encabezado))
 
@@ -406,6 +436,33 @@ def esVacio(campo):
     if not campo.strip():
         return True
     return False
+
+def buscarPaisesParcial(nombre, paises, empieceCon = False):
+    """
+    Busca países por nombre y retorna una lista con los indices. Si el parametro empieceCon es True, buscara solo aquellos
+    cuyo nombre empiecen con el input de la busqueda
+    """
+    cantidadPaises = len(paises)
+    nombreNormalizado = normalizarCampoStr(nombre)
+
+    coincidencias = []
+
+    # Si empieza el país empieza con la coincidencia indicada, retorna una lista con los indices de los paises
+    if empieceCon:
+        for i in range(cantidadPaises):
+            nombrePais = normalizarCampoStr(paises[i]['nombre'])
+
+            if nombrePais.find(nombreNormalizado) == 0:
+                coincidencias.append(i)
+
+        return coincidencias
+
+    # Buscada Parcial
+    for i in range(cantidadPaises):
+        if nombreNormalizado in normalizarCampoStr(paises[i]['nombre']):
+            coincidencias.append(i)
+
+    return coincidencias
 
 def buscarPais(nombre, paises):
     """Busca un país por nombre. Retorna el índice o -1."""
@@ -489,7 +546,6 @@ def filtrarPorContinente(paises):
 
     return paisesFiltrados
 
-
 def filtrarPorCantidad(paises, criterio):
     """
     Filtro por parametro numerico dentro de un rango solicitado al usaurio.
@@ -525,6 +581,8 @@ def filtrarPorCantidad(paises, criterio):
     # Filtro los paises que cumplan la condición
     for pais in paises:
         cantidad = normalizarCampoStr(pais[criterio])
+
+        cantidad = int(cantidad)
 
         # Si el campo del país esta dentro del rango de las cotas, lo incluyo a la lista de resultado (paisesFiltrados)
         if cotaSuperior >= cantidad and cantidad >= cotaInferior:
@@ -575,14 +633,18 @@ def esValidoSuperficie(superficie):
     return esEnteroPositivo(superficie, "La superficie debe ser un número entero positivo")
 
 def esOpcionValida(opcion, opciones):
-    """Verifica si una opición numerica pasada como parametro se incluye en un menú de opciones"""
+    """Verifica si una opición numerica pasada como parametro se incluye en un menú de opciones (Opcion >= 1)"""
     if not opcion.isdigit():
         print("\t" + "[X] Opción no válida")
         return False
 
-    if int(opcion) > len(opciones):
+    opcion = int(opcion)
+
+    # Opción fuera de rango.
+    if opcion < 1 or opcion > len(opciones):
         print("\t" + "[X] Opción no válida")
         return False
+
     return True
 
 # ==========================
@@ -597,7 +659,7 @@ def obtenerPaises():
     paises = []
 
     if not os.path.exists(NOMBRE_ARCHIVO):
-        inicializarArchivo(NOMBRE_ARCHIVO, COLUMNAS_ARCHIVO)
+        inicializarArchivo()
         return paises
 
     with open(NOMBRE_ARCHIVO, newline="", encoding="utf-8-sig") as archivo:
@@ -670,13 +732,20 @@ def reportePromedios(informacion):
     print(encabezado)
     print(separador)
 
-    # Utilizo enumerate para poder agregar un "indice" y no tener que usar una variable contadora
-    for i, promedio in enumerate(informacion):
-        print(f"| {i + 1:>3} | {promedio:<15} | {round(informacion[promedio], 2):<15} |")
+    # Recorro claves con un índice manual
+    claves = list(informacion.keys())
+    i = 0
+    while i < len(claves):
+        clave = claves[i]
+        promedio = informacion[clave]
 
-        # Divido las filas ya que son "reportes diferentes"
-        if i < len(informacion) - 1:
+        print(f"| {i + 1:>3} | {clave:<15} | {round(promedio, 2):<15} |")
+
+        # Separador entre filas
+        if i < len(claves) - 1:
             print(separador)
+
+        i += 1
 
     print(separador)
 
