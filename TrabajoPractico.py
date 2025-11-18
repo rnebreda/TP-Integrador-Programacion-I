@@ -1,5 +1,6 @@
 # ==========================
 # Módulos
+# ==========================
 
 import os
 import csv
@@ -7,6 +8,7 @@ import copy
 
 # ==========================
 # Constantes
+# ==========================
 
 SEPARADOR = 90
 NOMBRE_ARCHIVO = "paises.csv"
@@ -14,9 +16,10 @@ COLUMNAS_ARCHIVO = ["nombre", "poblacion", "superficie", "continente"]
 
 # ==========================
 # Funciones Principales
+# ==========================
 
+"""Muestra el menú principal y gestiona las opciones."""
 def mostrarMenu(): #MENU PRINCIPAL
-    """Muestra el menú principal y gestiona las opciones."""
 
     while True:
         print("\n" + "*" * SEPARADOR)
@@ -62,8 +65,9 @@ def mostrarMenu(): #MENU PRINCIPAL
             case _:
                 print("[X] Opción no válida. Por favor ingrese un número del 1 al 6. (0 para salir)")
 
+"""Permite al usuario ingresar uno o muchos paises en un archivo .csv"""
 def ingresarPaises(): #OPCION 1 DEL MENU
-    """Permite al usuario ingresar uno o muchos paises en un archivo .csv"""
+
 
     # Obtengo un listado con los registros del archivo.csv
     paises = obtenerPaises()
@@ -85,9 +89,11 @@ def ingresarPaises(): #OPCION 1 DEL MENU
     # Hago un único guardado con todos los países.
     guardarPaises(paises)
 
+"""Busca un país por el nombre y si lo encuentra, 
+permite modificar los valores de sus capos (población o superficie)"""
 def actualizarPais(): #OPCION 2 DEL MENU
-    """Busca un país por el nombre y si lo encuentra, permite modificar los valores de sus capos (población o superficie)"""
 
+    # Obtengo lista con los paises
     paises = obtenerPaises()
     if not paises:
         print("\t" + "[X] No hay paises cargados.")
@@ -132,8 +138,8 @@ def actualizarPais(): #OPCION 2 DEL MENU
                 guardarPaises(paises)
                 break
 
+"""Busca un país en el archivo y lista su información, tambien lista resultados similares a la busqueda"""
 def mostrarPais(): #OPCION 3 DEL MENU
-    """Busca un país en el archivo y lista su información, tambien lista resultados similares a la busqueda"""
 
     # Obtengo lista con los paises
     paises = obtenerPaises()
@@ -169,6 +175,7 @@ def mostrarPais(): #OPCION 3 DEL MENU
 
     listarPaises(resultados)
 
+""" Presenta la información de paises de acuerdo a criterios de selección y ordenamientos a elección """
 def filtrarPaises(): #OPCION 4 DEL MENU
     paises = obtenerPaises()
     if not paises:
@@ -213,6 +220,7 @@ def filtrarPaises(): #OPCION 4 DEL MENU
 
     listarPaises(paisesResultado)
 
+""" Muestra reporte de estadísticas sobre población, superficie, paises por continentes y promedios """
 def mostrarEstadisticas(paises): #OPCION 5 DEL MENU
     if not paises:
         print("\t" + "[X] No hay paises cargados.")
@@ -226,8 +234,9 @@ def mostrarEstadisticas(paises): #OPCION 5 DEL MENU
     reportePromedios(estadisticas['promedios'])
     reportePaisesPorContinente(estadisticas['paisesPorContinente'])
 
+"""Lista todos los paises de la lista pasada como parametro. Si no se le pasa una lista, 
+obtiene los paises desde el archivo .csv"""
 def mostrarPaises(paises): #OPCION 6 DEL MENU
-    """Lista todos los paises de la lista pasada como parametros, si no se le pasa una lista, obtiene los pasises desde el archivo .csv"""
 
     if not paises:
         print("\t" + "[X] No hay paises cargados.")
@@ -235,8 +244,14 @@ def mostrarPaises(paises): #OPCION 6 DEL MENU
 
     listarPaises(paises)
 
+
+# ==========================
+# Funciones auxiliares
+# ==========================
+
+"""Retorna una lista de países a partir de una lista de indices
+correspondientes con las posiciones en la lista original."""
 def obtenerResultadosIndice(indices, paises):
-    """Retorna una lista de países a partir de una lista de indices con sus respectivas posiciones en la lista original."""
 
     resultados = []
 
@@ -250,6 +265,7 @@ def obtenerResultadosIndice(indices, paises):
 
     return resultados
 
+""" Ordena la lista de paises de acuerdo al criterio deseado en forma ascendente o descendente"""
 def ordenarPaises(paises):
     paisesOrdenados = copy.deepcopy(paises)
 
@@ -279,6 +295,8 @@ def ordenarPaises(paises):
 
     return paisesOrdenados
 
+"""Retorna en un diccionario las estadísticas solicitadas de población, superficie, 
+    paises por continente y promedios"""
 def obtenerEstadisticas(paises):
     # Diccionario principal con todas las estadistacas, donde la clave del diccionario corresponde a el nombre del "reporte".
     estadisticas = dict()
@@ -361,8 +379,9 @@ def obtenerEstadisticas(paises):
 # Utilidades
 # ==========================
 
+""" Valida el criterio de ordenamiento y el tipo ascendente o descendente en función ordenarPaises """
 def mostrarMenúOpciones(mensaje, opciones):
-    """ Para validar el criterio de ordenamiento y el tipo ascendente o descendente """
+
     print("\n" + f"[!] {mensaje}")
     for i in range(len(opciones)):
         print(f"\t{i + 1}. {opciones[i]}")
@@ -374,8 +393,8 @@ def mostrarMenúOpciones(mensaje, opciones):
 
     return opciones[int(opcion) - 1]
 
+"""Crea un País y lo retorna"""
 def crearPais():
-    """Crea un País y lo retorna"""
 
     # Carga de campos para la entidad País
     nombre     = cargarCampoNombre(obtenerPaises())
@@ -392,8 +411,8 @@ def crearPais():
 
     return pais
 
+"""Lista la información de un país pasado como parámetro"""
 def listarPais(pais, modoLista = False):
-    """Lista la información de un país pasado como parámetro"""
 
     # Permite mostrar la información verticalmente
     if modoLista:
@@ -415,8 +434,8 @@ def listarPais(pais, modoLista = False):
     print(f"| {pais['nombre']:<20} | {pais['poblacion']:>12} | {pais['superficie']:>12} | {pais['continente']:>15} |")
     print(separador)
 
+"""Lista la información de todos los paises de una lista pasada como parámetro"""
 def listarPaises(paises):
-    """Lista la información de todos los paises de una lista pasada como parámetro"""
 
     # Listar Encabezado
     encabezado = f"{'Nº':>3} | {'NOMBRE':<20} | {'POBLACIÓN':<12} | {'SUPERFICIE':<12} | {'CONTINENTE':>15} |"
@@ -429,21 +448,22 @@ def listarPaises(paises):
         print(f"{i + 1:>3} | {paises[i]['nombre']:<20} | {paises[i]['poblacion']:>12} | {paises[i]['superficie']:>12} | {paises[i]["continente"]:>15} |")
     print("-" * len(encabezado))
 
+"""Da formato a las opciones del menú principal al mostrarlas en pantalla"""
 def mostrarOpcion(numero, mensaje):
     print("\n" + "*" * SEPARADOR)
     print(f"OPCIÓN {numero}: {mensaje}")
     print("*" * SEPARADOR)
 
+"""Valida que un campo string no sea vacío"""
 def esVacio(campo):
     if not campo.strip():
         return True
     return False
 
+"""Busca países por nombre (coincidencia parcial) y retorna una lista con los indices de las coincidencias.
+Si el parametro "empieceCon" es True, buscara solo aquellos cuyo nombre empiecen con el string ingresado"""
 def buscarPaisesParcial(nombre, paises, empieceCon = False):
-    """
-    Busca países por nombre y retorna una lista con los indices. Si el parametro empieceCon es True, buscara solo aquellos
-    cuyo nombre empiecen con el input de la busqueda
-    """
+
     cantidadPaises = len(paises)
     nombreNormalizado = normalizarCampoStr(nombre)
 
@@ -466,8 +486,8 @@ def buscarPaisesParcial(nombre, paises, empieceCon = False):
 
     return coincidencias
 
+"""Busca un país por nombre (coincidencia total). Retorna el índice si lo encuentra o -1."""
 def buscarPais(nombre, paises):
-    """Busca un país por nombre. Retorna el índice o -1."""
 
     nombreNormalizado = normalizarCampoStr(nombre)
     for i in range(len(paises)):
@@ -475,8 +495,8 @@ def buscarPais(nombre, paises):
             return i
     return -1
 
+"""Normaliza el string pasado como parametro: elimina espacios extra y convierte a minúsculas."""
 def normalizarCampoStr(texto):
-    """Normaliza el string pasado como parametro: elimina espacios extra y convierte a minúsculas."""
 
     palabras = str(texto).strip().split()
     resultado = ""
@@ -488,7 +508,7 @@ def normalizarCampoStr(texto):
 
     return resultado.lower()
 
-# Carga Campos País.
+""" Retorna el nombre de un país válido e inexistente en la lista de paises. """
 def cargarCampoNombre(paises):
     while True:
         nombre = input("[-] Ingrese el nombre del pais: ").strip()
@@ -496,6 +516,7 @@ def cargarCampoNombre(paises):
             break
     return nombre
 
+""" Retorna un valor de población válido (int). """
 def cargarCampoPoblacion():
     while True:
         poblacion = input("\t" + "[-] Población: ").strip()
@@ -503,6 +524,7 @@ def cargarCampoPoblacion():
             break
     return int(poblacion)
 
+""" Retorna un valor de superficie válido (int). """
 def cargarCampoSuperficie():
     while True:
         superficie = input("\t" + "[-] Superficie: ").strip()
@@ -510,6 +532,7 @@ def cargarCampoSuperficie():
             break
     return int(superficie)
 
+""" Retorna un continente válido (Se elige de una tupla). """
 def cargarCampoContinente():
     # Tupla de Continentes
     continentes = ("África", "América", "Asia", "Europa", "Oceanía")
@@ -528,12 +551,14 @@ def cargarCampoContinente():
 
     return continente
 
+
+# ==========================
 # Filtros
+# ==========================
+
+""" Solicita ingresar un continente al usuario y filtra los paises de la lista 
+    por el continente ingresado """
 def filtrarPorContinente(paises):
-    """
-    Solicita un continente al usuario y luego limita el conjunto de paises pasados como parametro,
-    a solo aquellos que coincidan con el nombre de país ingresado
-    """
 
     paisesFiltrados = []
 
@@ -548,11 +573,9 @@ def filtrarPorContinente(paises):
 
     return paisesFiltrados
 
+""" Filtro por parametro numerico dentro de un rango solicitado al usaurio (para superficies o población).
+    Recibe la lista de paises y el criterio por el cúal realizar las comparaciones"""
 def filtrarPorCantidad(paises, criterio):
-    """
-    Filtro por parametro numerico dentro de un rango solicitado al usaurio.
-    Recibe la lista de paises el criterio por el cúal realizar las comparaciones
-    """
 
     paisesFiltrados = []
 
@@ -592,12 +615,14 @@ def filtrarPorCantidad(paises, criterio):
 
     return paisesFiltrados
 
+
 # ==========================
 # Validaciones
 # ==========================
 
+"""Valida que el número pasado como párametro sea un entero positivo, 
+    opcionalmente imprime un mensaje de error"""
 def esEnteroPositivo(numero, mensajeError = None):
-    """Valido que el número pasado como párametro sea un entero positivo, opcionalmente imprime un mensjae de error"""
 
     if not numero.isdigit():
         if mensajeError:
@@ -605,12 +630,9 @@ def esEnteroPositivo(numero, mensajeError = None):
         return False
     return True
 
-# Campos País
+"""Verifica que el nombre ingresado por el usuario sea válido y si ya existe un país con ese nombre 
+    en la lista de paises"""
 def esValidoNombre(nombre, paises):
-    """
-    Válida que la entrada del usuario sea válida
-    ademas verifica si ya existe un país con el nombre pasado como parmetro
-    """
 
     # Campo Vacio
     if esVacio(nombre):
@@ -624,18 +646,20 @@ def esValidoNombre(nombre, paises):
 
     return True
 
+"""Verifica si el valor de población ingresado por el usuario es válido"""
 def esValidoPoblacion(poblacion):
-    """Validaciones para verificar si una población es válida"""
 
     return esEnteroPositivo(poblacion, "La población debe ser un número entero positivo")
 
+"""Verifica si el valor de superficie ingresado por el usuario es válido"""
 def esValidoSuperficie(superficie):
-    """Validaciones para verificar si una población es válida"""
 
     return esEnteroPositivo(superficie, "La superficie debe ser un número entero positivo")
 
+"""Verifica si una opición numerica está incluida en un menú de opciones,
+ambos pasados como parámetros (Opcion >= 1)"""
 def esOpcionValida(opcion, opciones):
-    """Verifica si una opición numerica pasada como parametro se incluye en un menú de opciones (Opcion >= 1)"""
+    
     if not opcion.isdigit():
         print("\t" + "[X] Opción no válida")
         return False
@@ -649,15 +673,15 @@ def esOpcionValida(opcion, opciones):
 
     return True
 
+
 # ==========================
 # Persistencia
 # ==========================
 
+"""Lee el archivo CSV y retorna una lista de diccionarios.
+    Si el archivo no existe, lo crea y retorna lista vacía."""
 def obtenerPaises():
-    """
-    Lee el archivo CSV y retorna una lista de diccionarios.
-    Si el archivo no existe, lo crea y retorna lista vacía.
-    """
+
     paises = []
 
     if not os.path.exists(NOMBRE_ARCHIVO):
@@ -675,8 +699,8 @@ def obtenerPaises():
 
     return paises
 
+"""Sobreescribe el archivo con el catálogo completo."""
 def guardarPaises(paises):
-    """Sobreescribe el archivo con el catálogo completo."""
 
     with open(NOMBRE_ARCHIVO, "w", newline="", encoding="utf-8-sig") as archivo:
         escritor = csv.DictWriter(archivo, fieldnames=COLUMNAS_ARCHIVO)
@@ -685,28 +709,29 @@ def guardarPaises(paises):
 
     print(f"[+] Archivo {NOMBRE_ARCHIVO} guardado exitosamente.")
 
+"""Crea el archivo .CSV con el encabezado."""
 def inicializarArchivo():
-    """Crea el archivo .CSV con el encabezado."""
 
     with open(NOMBRE_ARCHIVO, "w", newline="", encoding="utf-8-sig") as file:
         csv.DictWriter(file, fieldnames=COLUMNAS_ARCHIVO).writeheader()
     print(f"[+] Se creó el archivo {NOMBRE_ARCHIVO}")
 
+
 # ==========================
 # Reportes
 # ==========================
 
+"""Genera la estructura básica de un reporte genérico"""
 def inicializarReporte(titulo):
-    """Genera la estructura básica de un reporte genérico"""
 
     encabezadoReporte = f"| o Reporte |  {titulo} |"
 
     print("\n" + ("-" * SEPARADOR) + "\n" + encabezadoReporte)
     print("-" * len(encabezadoReporte) + "\n")
 
+"""Lista un reporte con los paises con mayor y menor población"""
 def reporteCotasPoblacion(informacion):
-    """Lista un reporte con los paises con mayor y menor población"""
-
+    
     # Encabezado inicial del reporte
     inicializarReporte("País con Mayor y Menor Población")
 
@@ -721,8 +746,8 @@ def reporteCotasPoblacion(informacion):
     print("\n" + "[2] País con menor población: " + menor['nombre'] + ", " + str(menor['poblacion']) + " habitantes.")
     listarPais(menor)
 
+"""Genera reporte con los promedios solicitados"""
 def reportePromedios(informacion):
-    """Genera un listado con los resultados de los reportes relacionados con promedios por determinado campo"""
 
     inicializarReporte("Promedio Superficies y Población")
 
@@ -751,8 +776,8 @@ def reportePromedios(informacion):
 
     print(separador)
 
+"""Genera reporte con cantidad de países por continente."""
 def reportePaisesPorContinente(informacion):
-    """Genera un listado con la cantidad de países por continente."""
 
     inicializarReporte("Países por Continente")
 
@@ -769,11 +794,12 @@ def reportePaisesPorContinente(informacion):
         print(f"| {i + 1:>3} | {continente:<14} | {informacion[continente]:<10} |")
     print(separador)
 
+
 # ==========================
 # Inicio de la aplicación
 # ==========================
 
-# Inicialización del Archivo
+""" Inicialización del Archivo """
 if not os.path.exists(NOMBRE_ARCHIVO):
     inicializarArchivo()
 
